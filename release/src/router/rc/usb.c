@@ -2308,7 +2308,7 @@ _dprintf("usb_path: 4. don't set %s.\n", tmp);
 			memset(buff2, 0, 64);
 			snprintf(buff2, sizeof(buff2), "%s/%s/.asusrouter.disabled", mountpoint, apps_folder);
 
-			if(check_if_file_exist(buff1) && !check_if_file_exist(buff2)){
+			if(nvram_match("usb_autorun_enable", "1") && check_if_file_exist(buff1) && !check_if_file_exist(buff2)){
 				// fsck the partition.
 				if(strcmp(nvram_safe_get("stop_fsck"), "1") && host_num != -3
 						// there's some problem with fsck.ext4.
