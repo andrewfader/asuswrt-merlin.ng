@@ -1773,6 +1773,8 @@ handle_request(void)
 				break;
 			}
 		}
+		if (!doreferer->pattern && match("**.cgi*", url))
+			do_referer = CHECK_REFERER;
 	}
 
 	// for each page, mime_exception is defined to do exception handler
