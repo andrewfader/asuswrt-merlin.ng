@@ -15546,9 +15546,11 @@ do_upgrade_post(char *url, FILE *stream, int len, char *boundary)
 	if ((si.freeram * si.mem_unit)/4 < len)
 		_dprintf("%s, small free mem...\n", __func__);
 	
-	eval("/sbin/ejusb", "-1", "0");
-	upgrade_rc("stop", autoreboot, reset, bootnew, 0);
-	stop_upgrade_once = 1;
+	if ((si.totalram / 1024 * si.mem_unit) < 512 * 1024) {
+		eval("/sbin/ejusb", "-1", "0");
+		upgrade_rc("stop", autoreboot, reset, bootnew, 0);
+		stop_upgrade_once = 1;
+	}
 #endif
 
 #ifdef RTCONFIG_COMFW
@@ -15566,7 +15568,8 @@ do_upgrade_post(char *url, FILE *stream, int len, char *boundary)
 	_dprintf("%s, Chk len=%d(%d), comfw_remain=%d, ex_len=%d, cf_head_size=%d, total=%d\n", __func__, len, len-ex_len, comfw_rem_len, ex_len, sizeof(comfw_head), sizeof(comfw_head) + len + comfw_rem_len - ex_len);
 #endif
 	_dprintf("%s, Again chk len=%d, cf_force_write=%d\n", __func__, len, cf_force_write);
-	wait_rc_misc();
+	if (stop_upgrade_once)
+		wait_rc_misc();
 
 #if defined(RTCONFIG_PIPEFW)
 	sys_upgrade_bca(stream, &len, boundary);
@@ -15577,7 +15580,7 @@ do_upgrade_post(char *url, FILE *stream, int len, char *boundary)
 
 #else	// RTCONFIG_PIPEFW
 
-#if defined(RTCONFIG_QCA) || defined(RTCONFIG_RALINK)
+#if defined(RTCONFIG_QCA) || defined(RTCONFIG_RALINK) || defined(HND_ROUTER)
 	if (!(fifo = fopen(upload_fifo, "w"))) goto err;
 #else
 	if (!(fifo = fopen(upload_fifo, "a+"))) goto err;

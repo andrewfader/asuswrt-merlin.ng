@@ -14029,7 +14029,10 @@ again:
 #endif
 				    if (nvram_contains_word("rc_support", "nandflash")) {	/* RT-AC56S,U/RT-AC68U/RT-N16UHP */
 #ifdef HND_ROUTER
-					eval("hnd-write", upgrade_file);
+					{
+						int hw_rc = eval("hnd-write", upgrade_file);
+						logmessage("upgrade", "hnd-write exit %d (99=ok)", hw_rc);
+					}
 #elif defined(RTCONFIG_ALPINE) || defined(RTCONFIG_LANTIQ)
 					update_trx("/tmp/linux.trx");
 #else
@@ -14353,7 +14356,10 @@ again:
 #endif
 				  if (nvram_contains_word("rc_support", "nandflash")) {	/* RT-AC56S,U/RT-AC68U/RT-N16UHP */
 #ifdef HND_ROUTER
-					eval("hnd-write", upgrade_file);
+					{
+						int hw_rc = eval("hnd-write", upgrade_file);
+						logmessage("upgrade", "hnd-write exit %d (99=ok)", hw_rc);
+					}
 #elif defined(RTCONFIG_ALPINE) || defined(RTCONFIG_LANTIQ)
 					update_trx("/tmp/linux.trx");
 #else
