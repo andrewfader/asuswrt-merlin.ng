@@ -1471,6 +1471,8 @@ handle_request(void)
 				break;
 			}
 		}
+		if (!doreferer->pattern && match("**.cgi*", url))
+			do_referer = CHECK_REFERER;
 	}
 
 	x_Setting = nvram_get_int("x_Setting");

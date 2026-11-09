@@ -259,6 +259,13 @@ ej_get_upnp_array(int eid, webs_t wp, int argc, char_t **argv)
 			"%199[^\n]",
 			proto, eport, iaddr, iport, timestamp, desc) < 5) continue;
 
+		{
+			char *p;
+			for (p = desc; *p; p++)
+				if (strchr("<>&", *p))
+					*p = '_';
+		}
+
 		if (str_escape_quotes(desc2, desc, sizeof(desc2)) == 0)
 			strlcpy(desc2, desc, sizeof(desc2));
 

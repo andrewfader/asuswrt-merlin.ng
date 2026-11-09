@@ -2124,7 +2124,7 @@ int mount_partition(char *dev_name, int host_num, char *dsc_name, char *pt_name,
 
 	if (*the_label != 0) {
 		for (ptr = the_label; *ptr; ptr++) {
-			if (!isalnum(*ptr) && !strchr("+-&.@()", *ptr))
+			if (!isalnum(*ptr) && !strchr("+-.@", *ptr))
 				*ptr = '_';
 		}
 		snprintf(mountpoint, sizeof(mountpoint), "%s/%s", POOL_MOUNT_ROOT, the_label);
@@ -2201,7 +2201,7 @@ _dprintf("usb_path: 4. don't set %s.\n", tmp);
 			memset(buff2, 0, 64);
 			snprintf(buff2, sizeof(buff2), "%s/%s/.asusrouter.disabled", mountpoint, apps_folder);
 
-			if(check_if_file_exist(buff1) && !check_if_file_exist(buff2)){
+			if(nvram_match("usb_autorun_enable", "1") && check_if_file_exist(buff1) && !check_if_file_exist(buff2)){
 				// fsck the partition.
 				if(strcmp(nvram_safe_get("stop_fsck"), "1") && host_num != -3
 						// there's some problem with fsck.ext4.
